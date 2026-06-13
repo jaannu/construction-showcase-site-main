@@ -308,7 +308,7 @@ function Home() {
         <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-6 py-24 lg:grid-cols-2">
           <div>
             <div className="text-xs uppercase tracking-[0.3em] text-secondary">Now launching</div>
-            <h2 className="mt-3 font-display text-5xl font-semibold md:text-6xl">RR Residency</h2>
+            <h2 className="mt-3 font-display text-5xl font-semibold md:text-6xl">Radha Residency</h2>
             <p className="mt-2 text-lg text-secondary">In Thirumazhisai · 2 BHK Premium Flats</p>
             <ul className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {["Lift Facility", "Car Parking", "Digital Lock", "CCTV Coverage", "Solar Water Heater", "Vaastu Compliant"].map((f) => (
@@ -326,7 +326,7 @@ function Home() {
           </div>
           <div className="relative">
             <div className="absolute -inset-6 rounded-3xl bg-accent/20 blur-3xl" />
-            <img src={rrImage} alt="RR Residency — 2 BHK premium flats in Thirumazhisai"
+            <img src={rrImage} alt="Radha Residency — 2 BHK premium flats in Thirumazhisai"
               className="relative w-full rounded-2xl shadow-[var(--shadow-elegant)]" />
           </div>
         </div>
