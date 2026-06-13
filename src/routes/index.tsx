@@ -14,6 +14,7 @@ import projectImage8 from "../public/WhatsApp Image 2026-06-13 at 11.10.35 AM.jp
 import projectImage9 from "../public/WhatsApp Image 2026-06-13 at 11.10.35 AM (1).jpeg?url";
 import rrImage from "../public/rr.jpeg?url";
 import sureshImage from "../public/suresh.jpeg?url";
+import bfrImage from "../public/bfr.jpeg?url";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -271,9 +272,8 @@ function Home() {
                   <img src={p.src} alt="" loading="lazy" className="w-full h-full object-cover" />
                   <div className="project-overlay">
                     <div className="meta">
-                      <div className="font-display font-semibold">{p.title}</div>
-                      <div className="text-sm mt-1">Tamil Nadu</div>
-                    </div>
+                        <div className="text-sm font-semibold">Tamil Nadu</div>
+                      </div>
                   </div>
                 </button>
               </div>
@@ -282,36 +282,15 @@ function Home() {
         </div>
       </section>
 
-      {/* Timeline (horizontal) */}
-      <section className="mx-auto max-w-7xl px-6 py-12">
-        <div className="overflow-x-auto py-6">
-          <div className="flex gap-8 items-center" style={{ minWidth: 800 }}>
-            {[
-              ['Founded', '1998'],
-              ['First Villa', '2002'],
-              ['10 Homes', '2010'],
-              ['50 Homes', '2022'],
-            ].map(([label, year], idx) => (
-              <div key={label} className="flex items-center gap-4">
-                <div className="w-4 h-4 rounded-full" style={{ background: 'var(--gold-1)' }} />
-                <div>
-                  <div className="font-display font-semibold">{label}</div>
-                  <div className="text-sm text-muted-foreground">{year}</div>
-                </div>
-                {idx < 3 && <div style={{ height: 2, background: 'var(--gold-1)', width: 120 }} />}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Timeline removed per request */}
 
       {/* Before / After slider */}
       <section className="mx-auto max-w-7xl px-6 py-12">
         <h3 className="font-display text-2xl font-semibold mb-6">Before / After</h3>
         <div ref={baRef} className="ba-slider mx-auto">
-          <img src={projectImage2} alt="before" />
+          <img src={featuredBuildImage} alt="before" />
           <div className="ba-top" style={{ width: '50%', overflow: 'hidden' }}>
-            <img src={projectImage3} alt="after" style={{ position: 'relative' }} />
+            <img src={bfrImage} alt="after" style={{ position: 'relative' }} />
           </div>
           <div className="ba-handle" />
         </div>
@@ -320,8 +299,7 @@ function Home() {
       {/* Testimonial full-bleed */}
       <section className="testimonial-bleed" style={{ backgroundImage: `url(${projectImage4})` }}>
         <div className="max-w-4xl mx-auto text-center">
-          <div className="quote">"Suresh transformed our vision into a home beyond expectation."</div>
-          <div className="mt-6 font-semibold">— Mr. & Mrs. Kumar</div>
+          <div className="quote">Our clients praise our attention to detail and timely delivery.</div>
         </div>
       </section>
 

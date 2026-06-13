@@ -114,7 +114,9 @@
 
 /* testimonial full-bleed */
 .testimonial-bleed { position:relative; color: #fff; padding:6rem 1rem; background-size:cover; background-position:center; }
-.testimonial-bleed .quote { font-family: var(--font-display); font-size:2.25rem; line-height:1.05; }
+.testimonial-bleed::before { content: ''; position:absolute; inset:0; background: linear-gradient(180deg, rgba(42,35,25,0.7) 0%, rgba(42,35,25,0.45) 100%); z-index:0; }
+.testimonial-bleed > * { position:relative; z-index:1; color: var(--gold-2); text-shadow: 0 6px 18px rgba(0,0,0,0.45); }
+.testimonial-bleed .quote { font-family: var(--font-display); font-size:2.25rem; line-height:1.05; color: var(--gold-2); }
 
 /* mobile sticky bottom bar */
 .sticky-bottom-bar { position: fixed; left:0; right:0; bottom:0; display:flex; gap:12px; justify-content:center; align-items:center; padding:10px; background: linear-gradient(90deg, rgba(45,106,58,0.12), rgba(181,148,90,0.06)); backdrop-filter: blur(6px); border-top:1px solid rgba(42,35,25,0.06); }
