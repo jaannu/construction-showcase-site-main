@@ -1,0 +1,71 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-display: "Fraunces", Georgia, serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+:root {
+  --radius: 0.5rem;
+  /* Palette: dad7cd, a3b18a, 588157, 3a5a40, 344e41 */
+  --cream: oklch(0.886 0.018 110);
+  --sage: oklch(0.745 0.046 125);
+  --leaf: oklch(0.555 0.085 142);
+  --forest: oklch(0.435 0.066 145);
+  --pine: oklch(0.385 0.052 150);
+
+  --background: var(--cream);
+  --foreground: var(--pine);
+  --card: oklch(0.96 0.012 110);
+  --card-foreground: var(--pine);
+  --primary: var(--forest);
+  --primary-foreground: var(--cream);
+  --secondary: var(--sage);
+  --secondary-foreground: var(--pine);
+  --muted: oklch(0.92 0.014 110);
+  --muted-foreground: oklch(0.45 0.03 145);
+  --accent: var(--leaf);
+  --accent-foreground: var(--cream);
+  --border: oklch(0.82 0.025 120);
+  --input: oklch(0.85 0.02 120);
+  --ring: var(--leaf);
+
+  --gradient-hero: linear-gradient(135deg, var(--pine) 0%, var(--forest) 55%, var(--leaf) 100%);
+  --gradient-soft: linear-gradient(180deg, var(--cream) 0%, oklch(0.93 0.018 115) 100%);
+  --shadow-elegant: 0 20px 50px -20px oklch(0.385 0.052 150 / 0.35);
+  --shadow-card: 0 8px 30px -12px oklch(0.385 0.052 150 / 0.25);
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+  }
+  h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.02em; }
+}
