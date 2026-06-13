@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState, useEffect, useRef } from "react";
 import featureImage from "../public/WhatsApp Image 2026-06-13 at 11.22.03 AM.jpeg?url";
 import logoImage from "../public/logo.jpg?url";
 import projectImage1 from "../public/WhatsApp Image 2026-06-13 at 11.10.33 AM.jpeg?url";
@@ -27,7 +28,7 @@ export const Route = createFileRoute("/")({
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;600;700&display=swap" },
     ],
   }),
   component: Home,
@@ -62,10 +63,98 @@ function Logo({ className = "" }: { className?: string }) {
 }
 
 function Home() {
+  const [lightbox, setLightbox] = useState<string | null>(null);
+  const [scrolled, setScrolled] = useState(false);
+  const featuredRef = useRef<HTMLImageElement | null>(null);
+  const statsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const headerRef = useRef<HTMLElement | null>(null);
+  const baRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setLightbox(null);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  // header blur toggle and parallax
+  useEffect(() => {
+    function onScroll() {
+      const y = window.scrollY || window.pageYOffset;
+      setScrolled(y > 20);
+      // parallax image
+      const img = featuredRef.current;
+      if (img) {
+        const rect = img.getBoundingClientRect();
+        const offset = window.scrollY - (img.offsetTop - window.innerHeight / 2);
+        const translate = Math.round(offset * 0.06);
+        img.style.transform = `translateY(${translate}px)`;
+      }
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // counter animation
+  useEffect(() => {
+    const els = statsRef.current.filter(Boolean) as HTMLDivElement[];
+    if (!els.length) return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const el = entry.target as HTMLDivElement;
+          const target = Number(el.dataset.target || 0);
+          let start = 0;
+          const duration = 1200;
+          const startTime = performance.now();
+          const step = (now: number) => {
+            const progress = Math.min((now - startTime) / duration, 1);
+            const value = Math.floor(progress * target);
+            el.textContent = value + (el.dataset.suffix || "");
+            if (progress < 1) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+          obs.unobserve(el);
+        }
+      });
+    }, { threshold: 0.3 });
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+
+  // before/after slider interactions
+  useEffect(() => {
+    const root = baRef.current;
+    if (!root) return;
+    const imgTop = root.querySelector<HTMLDivElement>(".ba-top");
+    const handle = root.querySelector<HTMLDivElement>(".ba-handle");
+    let dragging = false;
+    function setPos(x: number) {
+      const rect = root.getBoundingClientRect();
+      let pct = (x - rect.left) / rect.width;
+      pct = Math.max(0, Math.min(1, pct));
+      if (imgTop) imgTop.style.width = `${pct * 100}%`;
+      if (handle) (handle as HTMLElement).style.left = `${pct * 100}%`;
+    }
+    function onDown(e: PointerEvent) { dragging = true; (e.target as Element).setPointerCapture(e.pointerId); setPos(e.clientX); }
+    function onMove(e: PointerEvent) { if (!dragging) return; setPos(e.clientX); }
+    function onUp(e: PointerEvent) { dragging = false; }
+    handle?.addEventListener("pointerdown", onDown as any);
+    window.addEventListener("pointermove", onMove as any);
+    window.addEventListener("pointerup", onUp as any);
+    return () => {
+      handle?.removeEventListener("pointerdown", onDown as any);
+      window.removeEventListener("pointermove", onMove as any);
+      window.removeEventListener("pointerup", onUp as any);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Nav */}
-      <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur">
+      <header ref={(el) => (headerRef.current = el)} className={`sticky top-0 z-40 border-b border-border/60 ${scrolled ? 'navbar-blur' : 'bg-background/80'} `}>
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Logo />
           <nav className="hidden gap-8 text-sm font-medium md:flex">
@@ -74,7 +163,7 @@ function Home() {
             <a href="#about" className="hover:text-primary">About</a>
             <a href="#contact" className="hover:text-primary">Contact</a>
           </nav>
-          <a href="#contact" className="rounded-full bg-primary px-5 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90">
+          <a href="#contact" className="rounded-full bg-primary px-5 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90 cta-slide">
             Get a quote
           </a>
         </div>
@@ -104,9 +193,19 @@ function Home() {
               </a>
             </div>
             <dl className="mt-14 grid max-w-lg grid-cols-3 gap-6 border-t border-border pt-8">
-              {[["50+", "Homes built"], ["20+", "Years experience"], ["100%", "On-time delivery"]].map(([k, v]) => (
+              {[["50+", "Homes built"], ["20+", "Years experience"], ["100%", "On-time delivery"]].map(([k, v], i) => (
                 <div key={v}>
-                  <dt className="font-display text-3xl font-semibold text-primary">{k}</dt>
+                  <dt>
+                    <div
+                      ref={(el) => (statsRef.current[i] = el)}
+                      data-target={k.replace('+', '').replace('%', '')}
+                      data-suffix={k.includes('%') ? '%' : '+'}
+                      className="font-display text-3xl font-semibold"
+                      style={{ color: 'var(--gold-1)' }}
+                    >
+                      0
+                    </div>
+                  </dt>
                   <dd className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">{v}</dd>
                 </div>
               ))}
@@ -115,11 +214,16 @@ function Home() {
           <div className="lg:col-span-5">
             <div className="relative">
               <div className="absolute -inset-4 rounded-3xl bg-accent/20 blur-2xl" />
-              <img src={featuredBuildImage} alt="Modern illuminated villa by Suresh Construction" loading="eager"
-                className="relative aspect-[4/5] w-full rounded-3xl object-cover shadow-[var(--shadow-elegant)]" />
-              <div className="absolute -bottom-6 -left-6 hidden rounded-2xl border border-border bg-card p-4 shadow-[var(--shadow-card)] sm:block">
-                <div className="text-xs uppercase tracking-widest text-muted-foreground">Featured build</div>
-                <div className="mt-1 font-display text-lg font-semibold">Modern Illuminated Villa</div>
+              <img
+                ref={featuredRef}
+                src={featuredBuildImage}
+                alt=""
+                loading="eager"
+                className="relative w-full rounded-3xl parallax-img featured-card object-cover shadow-[var(--shadow-elegant)]"
+                style={{ maxHeight: 760 }}
+              />
+              <div className="absolute top-4 right-4 hidden sm:flex items-center gap-3">
+                <div className="badge-rotating rotate-slow">Premium Build · Tamil Nadu ·</div>
               </div>
             </div>
           </div>
@@ -154,22 +258,70 @@ function Home() {
           <a href="#contact" className="text-sm font-medium text-primary hover:underline">Commission a home →</a>
         </div>
 
-        <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {projects.map((p) => (
-            <button
-              key={p.title}
-              type="button"
-              onClick={() => {
-                window.location.href = p.src;
-              }}
-              className="group overflow-hidden rounded-2xl border border-border bg-card text-left shadow-[var(--shadow-card)] transition hover:-translate-y-1"
-            >
-              <div className="aspect-[4/3] overflow-hidden">
-                <img src={p.src} alt={p.title} loading="lazy"
-                  className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+        <div className="mt-12">
+          <div className="gold-divider"><span className="diamond" /></div>
+          <div className="masonry">
+            {projects.map((p, i) => (
+              <div key={p.src} className={`masonry-item ${i % 3 === 0 ? 'tall' : i % 3 === 1 ? 'short' : ''}`}>
+                <button
+                  type="button"
+                  onClick={() => setLightbox(p.src)}
+                  className="relative block overflow-hidden rounded-2xl border border-border bg-card text-left shadow-[var(--shadow-card)] transition hover:-translate-y-1"
+                >
+                  <img src={p.src} alt="" loading="lazy" className="w-full h-full object-cover" />
+                  <div className="project-overlay">
+                    <div className="meta">
+                      <div className="font-display font-semibold">{p.title}</div>
+                      <div className="text-sm mt-1">Tamil Nadu</div>
+                    </div>
+                  </div>
+                </button>
               </div>
-            </button>
-          ))}
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Timeline (horizontal) */}
+      <section className="mx-auto max-w-7xl px-6 py-12">
+        <div className="overflow-x-auto py-6">
+          <div className="flex gap-8 items-center" style={{ minWidth: 800 }}>
+            {[
+              ['Founded', '1998'],
+              ['First Villa', '2002'],
+              ['10 Homes', '2010'],
+              ['50 Homes', '2022'],
+            ].map(([label, year], idx) => (
+              <div key={label} className="flex items-center gap-4">
+                <div className="w-4 h-4 rounded-full" style={{ background: 'var(--gold-1)' }} />
+                <div>
+                  <div className="font-display font-semibold">{label}</div>
+                  <div className="text-sm text-muted-foreground">{year}</div>
+                </div>
+                {idx < 3 && <div style={{ height: 2, background: 'var(--gold-1)', width: 120 }} />}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Before / After slider */}
+      <section className="mx-auto max-w-7xl px-6 py-12">
+        <h3 className="font-display text-2xl font-semibold mb-6">Before / After</h3>
+        <div ref={baRef} className="ba-slider mx-auto">
+          <img src={projectImage2} alt="before" />
+          <div className="ba-top" style={{ width: '50%', overflow: 'hidden' }}>
+            <img src={projectImage3} alt="after" style={{ position: 'relative' }} />
+          </div>
+          <div className="ba-handle" />
+        </div>
+      </section>
+
+      {/* Testimonial full-bleed */}
+      <section className="testimonial-bleed" style={{ backgroundImage: `url(${projectImage4})` }}>
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="quote">"Suresh transformed our vision into a home beyond expectation."</div>
+          <div className="mt-6 font-semibold">— Mr. & Mrs. Kumar</div>
         </div>
       </section>
 
@@ -257,7 +409,7 @@ function Home() {
               </p>
               <div className="mt-10 space-y-4 text-base">
                 <a href="tel:+919884481129" className="flex items-center gap-4 rounded-xl border border-border bg-background p-4 transition hover:border-primary">
-                  <span className="grid h-10 w-10 place-items-center rounded-full bg-primary text-primary-foreground">📞</span>
+                  <span className="grid h-10 w-10 place-items-center rounded-full bg-primary text-primary-foreground">Call</span>
                   <div>
                     <div className="text-xs uppercase tracking-wider text-muted-foreground">Call</div>
                     <div className="font-medium">+91 98844 81129</div>
@@ -294,6 +446,36 @@ function Home() {
           <div className="text-sm text-muted-foreground">© {new Date().getFullYear()} Suresh Construction. All rights reserved.</div>
         </div>
       </footer>
+
+      {/* Mobile sticky bottom bar */}
+      <div className="sticky-bottom-bar md:hidden">
+        <a href="tel:+919884481129" className="btn">
+          Call
+        </a>
+        <a href="https://wa.me/919884481129" className="btn" target="_blank">
+          WhatsApp
+        </a>
+      </div>
+
+      {lightbox ? (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-6"
+          onClick={() => setLightbox(null)}
+        >
+          <div className="relative max-h-[95vh] max-w-[95vw]" onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={() => setLightbox(null)}
+              aria-label="Close preview"
+              className="absolute right-2 top-2 z-50 inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-2xl text-white backdrop-blur transition hover:scale-105"
+            >
+              ×
+            </button>
+            <img src={lightbox} alt="" className="max-h-[95vh] w-auto object-contain" />
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

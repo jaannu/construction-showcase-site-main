@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-display: "Fraunces", Georgia, serif;
+  --font-display: "Playfair Display", Georgia, serif;
   --font-sans: "Inter", system-ui, sans-serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -30,33 +30,37 @@
 
 :root {
   --radius: 0.5rem;
-  /* Palette: dad7cd, a3b18a, 588157, 3a5a40, 344e41 */
-  --cream: oklch(0.886 0.018 110);
-  --sage: oklch(0.745 0.046 125);
-  --leaf: oklch(0.555 0.085 142);
-  --forest: oklch(0.435 0.066 145);
-  --pine: oklch(0.385 0.052 150);
+  /* User-requested palette: sage green primary, warm gold accents, deep charcoal, warm cream background */
+  --sage-1: #2d6a3a; /* primary */
+  --sage-2: #1e4d2b;
+  --gold-1: #b5985a;
+  --gold-2: #d4b483;
+  --charcoal: #2a2319;
+  --cream-warm: #f5f0e8;
 
-  --background: var(--cream);
-  --foreground: var(--pine);
-  --card: oklch(0.96 0.012 110);
-  --card-foreground: var(--pine);
-  --primary: var(--forest);
-  --primary-foreground: var(--cream);
-  --secondary: var(--sage);
-  --secondary-foreground: var(--pine);
-  --muted: oklch(0.92 0.014 110);
-  --muted-foreground: oklch(0.45 0.03 145);
-  --accent: var(--leaf);
-  --accent-foreground: var(--cream);
-  --border: oklch(0.82 0.025 120);
-  --input: oklch(0.85 0.02 120);
-  --ring: var(--leaf);
+  --background: var(--cream-warm);
+  --foreground: var(--charcoal);
+  --card: #ffffff;
+  --card-foreground: var(--charcoal);
+  --primary: var(--sage-1);
+  --primary-foreground: #ffffff;
+  --secondary: var(--sage-2);
+  --secondary-foreground: #ffffff;
+  --accent: var(--gold-1);
+  --accent-2: var(--gold-2);
+  --muted: #efe9e1;
+  --muted-foreground: #6b5e50;
+  --border: rgba(42,35,25,0.06);
+  --input: rgba(42,35,25,0.04);
+  --ring: rgba(181,148,90,0.18);
 
-  --gradient-hero: linear-gradient(135deg, var(--pine) 0%, var(--forest) 55%, var(--leaf) 100%);
-  --gradient-soft: linear-gradient(180deg, var(--cream) 0%, oklch(0.93 0.018 115) 100%);
-  --shadow-elegant: 0 20px 50px -20px oklch(0.385 0.052 150 / 0.35);
-  --shadow-card: 0 8px 30px -12px oklch(0.385 0.052 150 / 0.25);
+  --gradient-hero: linear-gradient(90deg, rgba(42,35,25,0.65) 0%, rgba(42,35,25,0.0) 55%);
+  --gradient-soft: linear-gradient(180deg, var(--cream-warm) 0%, #f8f5f0 100%);
+  --shadow-elegant: 0 30px 80px -40px rgba(42,35,25,0.25);
+  --shadow-card: 0 10px 30px -12px rgba(42,35,25,0.18);
+
+  /* Decorative */
+  --divider-gold: var(--gold-1);
 }
 
 @layer base {
@@ -69,3 +73,52 @@
   }
   h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.02em; }
 }
+
+/* --- Designer utilities & components --- */
+.parallax-img { transform: translateY(0); transition: transform 0.1s linear; }
+.featured-card { border: 1px solid rgba(181,148,90,0.25); }
+.badge-rotating { display: inline-block; padding: 6px 10px; border-radius: 999px; background: linear-gradient(90deg,var(--gold-1),var(--gold-2)); color: #fff; font-size: 12px; font-weight:600; }
+.rotate-slow { animation: rotate-slow 12s linear infinite; }
+@keyframes rotate-slow { from { transform: rotate(0deg);} to { transform: rotate(360deg);} }
+
+/* gold divider with centered diamond */
+.gold-divider { display:block; text-align:center; margin: 2.5rem 0; }
+.gold-divider::before { content: ''; display:block; height:1px; background: var(--divider-gold); position:relative; margin:0 auto; width:100%; }
+.gold-divider > .diamond { display:inline-block; position:relative; margin-top:-9px; background:var(--divider-gold); width:12px; height:12px; transform: rotate(45deg); border-radius:1px; }
+
+/* masonry layout */
+.masonry { column-count: 3; column-gap: 1rem; }
+.masonry-item { display:inline-block; width:100%; margin:0 0 1rem; break-inside: avoid; }
+.masonry-item.tall img{ height:420px; object-fit:cover; }
+.masonry-item.short img{ height:260px; object-fit:cover; }
+
+/* project overlay */
+.project-overlay { position: absolute; inset: 0; display:flex; align-items:flex-end; padding:1rem; transform: translateY(100%); transition: transform .35s ease; background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(10,10,10,0.55) 100%); }
+.masonry-item:hover .project-overlay { transform: translateY(0%); }
+.project-overlay .meta { color: var(--cream-warm); }
+
+/* CTA slide-fill */
+.cta-slide { position: relative; overflow:hidden; border:1px solid var(--gold-1); }
+.cta-slide::after { content:''; position:absolute; inset:0; background: linear-gradient(90deg,var(--gold-1),var(--gold-2)); transform: scaleX(0); transform-origin:left; transition: transform .35s ease; z-index:0; }
+.cta-slide > * { position:relative; z-index:2; }
+.cta-slide:hover::after { transform: scaleX(1); }
+
+/* navbar blur when scrolled */
+.navbar-blur { backdrop-filter: saturate(120%) blur(6px); background: rgba(245,240,232,0.7); border-bottom:1px solid rgba(42,35,25,0.06); }
+
+/* before-after slider */
+.ba-slider { position:relative; width:100%; max-width:980px; height:420px; overflow:hidden; user-select:none; }
+.ba-slider img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.ba-handle { position:absolute; left:50%; top:0; bottom:0; width:3px; background:rgba(255,255,255,0.7); transform:translateX(-50%); cursor:ew-resize; }
+.ba-handle::after{ content:''; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:36px; height:36px; background:var(--gold-1); border-radius:999px; box-shadow:0 4px 14px rgba(0,0,0,0.25);} 
+
+/* testimonial full-bleed */
+.testimonial-bleed { position:relative; color: #fff; padding:6rem 1rem; background-size:cover; background-position:center; }
+.testimonial-bleed .quote { font-family: var(--font-display); font-size:2.25rem; line-height:1.05; }
+
+/* mobile sticky bottom bar */
+.sticky-bottom-bar { position: fixed; left:0; right:0; bottom:0; display:flex; gap:12px; justify-content:center; align-items:center; padding:10px; background: linear-gradient(90deg, rgba(45,106,58,0.12), rgba(181,148,90,0.06)); backdrop-filter: blur(6px); border-top:1px solid rgba(42,35,25,0.06); }
+.sticky-bottom-bar .btn { display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:999px; background:var(--primary); color:#fff; font-weight:600; }
+
+@media (max-width: 900px) { .masonry { column-count:2; } }
+@media (max-width: 600px) { .masonry { column-count:1; } .sticky-bottom-bar{display:flex;} }
