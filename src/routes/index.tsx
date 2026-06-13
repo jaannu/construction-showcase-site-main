@@ -289,8 +289,8 @@ function Home() {
         <h3 className="font-display text-2xl font-semibold mb-6">Before / After</h3>
         <div ref={baRef} className="ba-slider mx-auto">
           <img src={featuredBuildImage} alt="before" />
-          <div className="ba-top" style={{ width: '50%', overflow: 'hidden' }}>
-            <img src={bfrImage} alt="after" style={{ position: 'relative' }} />
+          <div className="ba-top" style={{ width: '50%', overflow: 'hidden', position: 'relative', height: '100%' }}>
+            <img src={bfrImage} alt="after" />
           </div>
           <div className="ba-handle" />
         </div>

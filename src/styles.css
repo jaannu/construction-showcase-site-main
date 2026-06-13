@@ -105,9 +105,10 @@
 .navbar-blur { backdrop-filter: saturate(120%) blur(6px); background: rgba(245,240,232,0.7); border-bottom:1px solid rgba(42,35,25,0.06); }
 
 /* before-after slider */
-.ba-slider { position:relative; width:100%; max-width:980px; height:420px; overflow:hidden; user-select:none; }
-.ba-slider { touch-action: none; }
-.ba-slider img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.ba-slider { position:relative; width:100%; max-width:980px; height:420px; overflow:hidden; user-select:none; touch-action: none; background: var(--cream-warm); }
+.ba-slider img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; object-position:center center; background: var(--cream-warm); }
+.ba-top { position:relative; height:100%; overflow:hidden; }
+.ba-top img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; object-position:center center; background: var(--cream-warm); }
 .ba-handle { position:absolute; left:50%; top:0; bottom:0; width:3px; background:rgba(255,255,255,0.7); transform:translateX(-50%); cursor:ew-resize; }
 .ba-handle::after{ content:''; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:36px; height:36px; background:var(--gold-1); border-radius:999px; box-shadow:0 4px 14px rgba(0,0,0,0.25);} 
 
@@ -128,4 +129,5 @@
   .ba-slider { height: 300px; }
   .ba-handle { width: 5px; }
   .ba-handle::after { width: 44px; height: 44px; }
+  .ba-top { height: 100%; }
 }
