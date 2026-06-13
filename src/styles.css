@@ -48,6 +48,7 @@
   --secondary-foreground: #ffffff;
   --accent: var(--gold-1);
   --accent-2: var(--gold-2);
+  --accent-foreground: var(--charcoal);
   --muted: #efe9e1;
   --muted-foreground: #6b5e50;
   --border: rgba(42,35,25,0.06);
@@ -78,9 +79,6 @@
 .parallax-img { transform: translateY(0); transition: transform 0.1s linear; }
 .featured-card { border: 1px solid rgba(181,148,90,0.25); }
 .badge-rotating { display: inline-block; padding: 6px 10px; border-radius: 999px; background: linear-gradient(90deg,var(--gold-1),var(--gold-2)); color: #fff; font-size: 12px; font-weight:600; }
-.rotate-slow { animation: rotate-slow 12s linear infinite; }
-@keyframes rotate-slow { from { transform: rotate(0deg);} to { transform: rotate(360deg);} }
-
 /* gold divider with centered diamond */
 .gold-divider { display:block; text-align:center; margin: 2.5rem 0; }
 .gold-divider::before { content: ''; display:block; height:1px; background: var(--divider-gold); position:relative; margin:0 auto; width:100%; }
