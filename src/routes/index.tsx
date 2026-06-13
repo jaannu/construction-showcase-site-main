@@ -312,9 +312,9 @@ function Home() {
             <p className="mt-2 text-lg text-secondary">In Thirumazhisai · 2 BHK Premium Flats</p>
             <ul className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {["Lift Facility", "Car Parking", "Digital Lock", "CCTV Coverage", "Solar Water Heater", "Vaastu Compliant"].map((f) => (
-                <li key={f} className="flex items-center gap-3 rounded-lg bg-primary-foreground/10 px-4 py-3 backdrop-blur">
-                  <span className="grid h-7 w-7 place-items-center rounded-full bg-accent text-[var(--charcoal)] text-base font-bold leading-none shadow-sm">✓</span>
-                  <span className="text-sm font-semibold text-[var(--gold-2)]">{f}</span>
+                <li key={f} className="flex items-center gap-3 rounded-lg bg-[#f5f0e8]/95 px-4 py-3 backdrop-blur">
+                  <span className="grid h-7 w-7 place-items-center rounded-full bg-[#f5f0e8] text-black text-base font-bold leading-none shadow-sm">✓</span>
+                  <span className="text-sm font-semibold text-black">{f}</span>
                 </li>
               ))}
             </ul>
